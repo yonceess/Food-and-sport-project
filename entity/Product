@@ -1,0 +1,58 @@
+package io.javabrains.springsecurityjpa.entity;
+
+import io.javabrains.springsecurityjpa.model.ProductRequest;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "products")
+@Data
+@NoArgsConstructor
+public class Product {
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private Long id;
+        private String food_name;
+        private Integer calories;
+        private Integer weight;
+
+        public Product(ProductRequest productRequest) {
+            this.food_name = productRequest.getName();
+            this.calories = productRequest.getCalories();
+            this.weight = productRequest.getWeight();
+        }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFood_name() {
+        return food_name;
+    }
+
+    public void setFood_name(String food_name) {
+        this.food_name = food_name;
+    }
+
+    public Integer getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Integer calories) {
+        this.calories = calories;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+}
