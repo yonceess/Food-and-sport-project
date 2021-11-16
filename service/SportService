@@ -1,0 +1,40 @@
+package io.javabrains.springsecurityjpa.service;
+
+import io.javabrains.springsecurityjpa.entity.Sport;
+import io.javabrains.springsecurityjpa.model.SportRequest;
+import io.javabrains.springsecurityjpa.repository.SportRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class SportService {
+    @Autowired
+    SportRepository sportRepository;
+
+    public Sport create(SportRequest request) {
+        request.setDate(new Date());
+        return sportRepository.save(new Sport(request));
+    }
+
+    public Sport getSport(Integer id){
+        return sportRepository.findById(id.longValue()).orElse(null);
+    }
+
+    public boolean deleteSport(Integer id) {
+        Optional<Sport> byId = sportRepository.findById((long) id);
+        if(byId == null) {
+            return false;
+        }
+        sportRepository.deleteById((long) id);
+        return true;
+    }
+
+    public List<Sport> get(){
+        return (List) sportRepository.findAll();
+
+    }
+}
