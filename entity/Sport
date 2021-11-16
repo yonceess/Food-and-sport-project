@@ -1,0 +1,59 @@
+package io.javabrains.springsecurityjpa.entity;
+
+import io.javabrains.springsecurityjpa.model.SportRequest;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "sport")
+@Data
+@NoArgsConstructor
+public class Sport {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String sport_name;
+    private Integer calories;
+    private Integer time;
+
+    public Sport(SportRequest sportRequest) {
+        this.sport_name = sportRequest.getName();
+        this.calories = sportRequest.getCalories();
+        this.time = sportRequest.getTime();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSport_name() {
+        return sport_name;
+    }
+
+    public void setSport_name(String sport_name) {
+        this.sport_name = sport_name;
+    }
+
+    public Integer getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Integer calories) {
+        this.calories = calories;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
+    }
+}
+
