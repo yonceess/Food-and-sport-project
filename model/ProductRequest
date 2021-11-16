@@ -1,0 +1,28 @@
+package io.javabrains.springsecurityjpa.model;
+
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+public class ProductRequest {
+    private String food_name;
+    private Integer calories;
+    private Integer weight;
+    private String date;
+
+    public String getName() {
+        return food_name;
+    }
+
+    public Integer getCalories() {
+        return calories;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setDate(Date date) {
+    }
+}
