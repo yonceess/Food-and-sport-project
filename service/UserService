@@ -1,0 +1,283 @@
+package io.javabrains.springsecurityjpa.service;
+
+
+import io.javabrains.springsecurityjpa.entity.Product;
+import io.javabrains.springsecurityjpa.entity.Questionnaire;
+import io.javabrains.springsecurityjpa.entity.Sport;
+import io.javabrains.springsecurityjpa.helpers.ValidateHelper;
+import io.javabrains.springsecurityjpa.model.QuestionnaireRequest;
+import io.javabrains.springsecurityjpa.model.UserRequest;
+import io.javabrains.springsecurityjpa.models.User;
+import io.javabrains.springsecurityjpa.repository.ProductRepository;
+import io.javabrains.springsecurityjpa.repository.QuestRepository;
+import io.javabrains.springsecurityjpa.repository.SportRepository;
+import io.javabrains.springsecurityjpa.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+@RequiredArgsConstructor
+public class UserService  {
+
+    List<Product> products = new ArrayList<>();
+    List<Sport> sport = new ArrayList<>();
+    List<Questionnaire> quest = new ArrayList<>();
+
+
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private SportRepository sportRepository;
+    @Autowired
+    private QuestRepository questRepository;
+
+
+    public List<User> getAll(){
+        return (List<User>) userRepo.findAll();
+    }
+
+    // SAVE IN DB
+
+    public boolean saveUser(UserRequest userRequest) {
+        if(!ValidateHelper.validate(userRequest.getEmail())) {
+            return false;
+        }
+        User byEmail = userRepo.findByEmail(userRequest.getEmail());
+        if(byEmail != null) {
+            return false;
+        }
+        User user = new User(userRequest.getFirstName(), userRequest.getSecondName(),
+                userRequest.getEmail(), userRequest.getPhone_num(), userRequest.getPassword(), userRequest.getRoles());
+        System.out.println(user.getPassword());
+
+        userRepo.save(user);
+        return true;
+    }
+
+    // TAKE PASSWORD
+
+    public String pass(UserRequest userRequest){
+        User user = userRepo.findByEmail(userRequest.getEmail());
+        return user.getPassword();
+    }
+
+    // UPDATE INFO ABOUT USER
+
+    public boolean updateUser(UserRequest userRequest){
+        System.out.println(userRequest.getEmail());
+        User byEmail = userRepo.findByEmail(userRequest.getEmail());
+        if (byEmail == null) {
+            System.out.println(userRequest.getEmail());
+            return false;
+        }
+        System.out.println(userRequest.getEmail());
+
+
+            User userDB = userRepo.findByEmail(userRequest.getEmail());
+            userDB.setFirstName(userRequest.getFirstName());
+            userDB.setSecondName(userRequest.getSecondName());
+            userDB.setPhone(userRequest.getPhone_num());
+            userDB.setPassword(userRequest.getPassword());
+            userRepo.save(userDB);
+
+            return true;
+
+
+
+    }
+
+    //ADD PRODUCT TO USER
+
+    public boolean addProductsToUser(Integer userId, List<Integer> productIds) {
+        Optional<User> userOptional = userRepo.findById(userId.longValue());
+        User user = userOptional.orElse(null);
+        if(user == null) {
+            return false;
+        }
+
+
+        System.out.println(products);
+            productIds.forEach(id -> productRepository.findById(id.longValue()).ifPresent(p -> products.add(p)));
+        System.out.println(products);
+            user.setProducts(products);
+            userRepo.save(user);
+            return true;
+
+    }
+
+    //DELETE PRODUCT TO USER
+
+    public boolean deleteProductsToUser(Integer userId, List<Integer> productIds){
+        Optional<User> userOptional = userRepo.findById(userId.longValue());
+        User user = userOptional.orElse(null);
+        if(user == null) {
+            return false;
+        }
+
+            productIds.forEach(id -> productRepository.findById(id.longValue()).ifPresent(p -> products.remove(p)));
+            user.setProducts(products);
+            userRepo.save(user);
+            return true;
+
+    }
+
+    //ADD SPORT TO USER
+
+
+    public boolean addSportToUser(Integer userId, List<Integer> sportIds) {
+        Optional<User> userOptional = userRepo.findById(userId.longValue());
+        User user = userOptional.orElse(null);
+        if(user == null) {
+            return false;
+        }
+         sportIds.forEach(id -> sportRepository.findById(id.longValue()).ifPresent(p -> sport.add(p)));
+            user.setSport(sport);
+            userRepo.save(user);
+            return true;
+
+    }
+
+    //ADD QUESTIONNAIRE TO USER
+
+
+    public boolean addQuestToUser(Integer userId, List<Integer> questIds) {
+        Optional<User> userOptional = userRepo.findById(userId.longValue());
+        User user = userOptional.orElse(null);
+        if(user == null) {
+            return false;
+        }
+
+            questIds.forEach(id -> questRepository.findById(id.longValue()).ifPresent(p -> quest.add(p)));
+            user.setQuest(quest);
+            userRepo.save(user);
+            return true;
+
+    }
+
+    //DELETE SPORT TO USER
+
+    public boolean deleteSportToUser(Integer userId, List<Integer> sportIds){
+        Optional<User> userOptional = userRepo.findById(userId.longValue());
+        User user = userOptional.orElse(null);
+        if(user == null) {
+            return false;
+        }
+
+            sportIds.forEach(id -> sportRepository.findById(id.longValue()).ifPresent(p -> sport.remove(p)));
+            user.setSport(sport);
+            userRepo.save(user);
+            return true;
+
+    }
+
+    //DELETE QUESTIONNAIRE TO USER
+
+    public boolean deleteQuestToUser(Integer userId, List<Integer> sportIds){
+        Optional<User> userOptional = userRepo.findById(userId.longValue());
+        User user = userOptional.orElse(null);
+        if(user == null) {
+            return false;
+        }
+
+            List<Questionnaire> quest = new ArrayList<>();
+            sportIds.forEach(id -> questRepository.findById(id.longValue()).ifPresent(p -> quest.remove(p)));
+            user.setQuest(quest);
+            userRepo.save(user);
+            return true;
+
+    }
+
+    public Questionnaire getq(String email){
+        return questRepository.findByEmail(email);
+    }
+
+
+    public User getUser(Integer id) {
+        return userRepo.findById(id.longValue()).orElse(null);
+    }
+
+    public User getbyEm(String email) {
+    return userRepo.findByEmail(email);
+    }
+
+
+    public Questionnaire getQuest(String email) {
+        return questRepository.findByEmail(email);
+    }
+
+
+// DELETE USER
+
+    public boolean deleteUser(Integer id) {
+        Optional<User> byEmail = userRepo.findById((long) id);
+        if(byEmail == null) {
+            return false;
+        }
+
+        userRepo.deleteById((long) id);
+
+
+        return true;
+    }
+
+    // CREATE QUESTIONNAIRE
+
+    public boolean quest(QuestionnaireRequest qRequest){
+        User byEmail = userRepo.findByEmail( qRequest.getEmail());
+
+        if(byEmail == null) {
+            return false;
+        }
+        Questionnaire questionnaire = new Questionnaire(qRequest);
+        questRepository.save(questionnaire);
+        qRequest.calories(qRequest.getWeight(),qRequest.getHeight(),qRequest.getAge());
+
+        return true;
+    }
+
+    // UPDATE QUESTIONNAIRE
+
+    public boolean updateQuest(QuestionnaireRequest qRequest){
+        User byEmail = userRepo.findByEmail(qRequest.getEmail());
+        if(byEmail == null) {
+            return false;
+        }
+
+        Questionnaire questDB = questRepository.findByEmail(qRequest.getEmail());
+        questDB.setAge(qRequest.getAge());
+        questDB.setHeight(qRequest.getHeight());
+        questDB.setWeight(qRequest.getWeight());
+        questDB.setLifestyle(qRequest.getLifestyle());
+        questRepository.save(questDB);
+
+        return true;
+    }
+
+    // DELETE QUEST
+
+    public boolean deleteQuest(String email) {
+        Questionnaire byEmail = questRepository.findByEmail(email);
+        if(byEmail == null) {
+            return false;
+        }
+        questRepository.deleteByEmail(email);
+
+
+        return true;
+    }
+
+
+
+    public List<User> get(){
+        return (List) userRepo.findAll();
+
+    }
+
+
+
+}
