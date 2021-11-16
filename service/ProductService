@@ -1,0 +1,45 @@
+package io.javabrains.springsecurityjpa.service;
+
+import io.javabrains.springsecurityjpa.entity.Product;
+import io.javabrains.springsecurityjpa.model.ProductRequest;
+import io.javabrains.springsecurityjpa.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ProductService {
+
+    @Autowired
+    ProductRepository productRepository;
+
+    public Product create(ProductRequest request) {
+        System.out.println("mane");
+        request.setDate(new Date());
+        return productRepository.save(new Product(request));
+    }
+
+    public Product getProduct(Integer id) {
+        return productRepository.findById(id.longValue()).orElse(null);
+    }
+
+    public boolean deleteProduct(Integer id) {
+        Optional<Product> byId = productRepository.findById((long) id);
+        if(byId == null) {
+            return false;
+        }
+        productRepository.deleteById((long) id);
+
+
+        return true;
+    }
+
+    public List<Product> get(){
+        return (List) productRepository.findAll();
+
+    }
+
+}
