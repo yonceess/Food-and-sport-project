@@ -1,0 +1,17 @@
+package io.javabrains.springsecurityjpa.service;
+
+import io.javabrains.springsecurityjpa.entity.Admin;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AdminService {
+
+    public boolean checker(Admin admin){
+        if(admin.getEmail().equals("sabrina@mail.ru")) {
+            if (admin.getPassword().equals("12345")) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
