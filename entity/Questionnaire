@@ -1,0 +1,79 @@
+package io.javabrains.springsecurityjpa.entity;
+
+import io.javabrains.springsecurityjpa.model.QuestionnaireRequest;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "quest")
+@Data
+@NoArgsConstructor
+public class Questionnaire {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private int height;
+    private int weight;
+    private int age;
+    @Column(columnDefinition = "TEXT")
+    private String email;
+    private String lifestyle;
+
+    public Questionnaire(QuestionnaireRequest questionnaireRequest) {
+        this.email = questionnaireRequest.getEmail();
+        this.height = questionnaireRequest.getHeight();
+        this.weight = questionnaireRequest.getWeight();
+        this.age = questionnaireRequest.getAge();
+        this.lifestyle = questionnaireRequest.getLifestyle();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLifestyle() {
+        return lifestyle;
+    }
+
+    public void setLifestyle(String lifestyle) {
+        this.lifestyle = lifestyle;
+    }
+}
