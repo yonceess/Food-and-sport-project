@@ -1,0 +1,11 @@
+package io.javabrains.springsecurityjpa.model;
+
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class DeleteProductRequest {
+    private Integer userId;
+    private List<Integer> productIds;
+}
