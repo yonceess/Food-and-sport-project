@@ -1,0 +1,10 @@
+package io.javabrains.springsecurityjpa.repository;
+
+import io.javabrains.springsecurityjpa.entity.Questionnaire;
+import org.springframework.data.repository.CrudRepository;
+
+public interface QuestRepository  extends CrudRepository<Questionnaire, Long> {
+    Questionnaire findById(int id);
+    Questionnaire findByEmail(String email);
+    Questionnaire deleteByEmail(String email);
+}
