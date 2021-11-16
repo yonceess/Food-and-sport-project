@@ -1,0 +1,11 @@
+package io.javabrains.springsecurityjpa.model;
+
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class AddQuest {
+    private Integer userId;
+    private List<Integer> questIds;
+}
