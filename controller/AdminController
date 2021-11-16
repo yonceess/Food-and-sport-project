@@ -1,0 +1,185 @@
+package io.javabrains.springsecurityjpa.controller;
+
+import io.javabrains.springsecurityjpa.entity.Admin;
+import io.javabrains.springsecurityjpa.entity.Product;
+import io.javabrains.springsecurityjpa.entity.Sport;
+import io.javabrains.springsecurityjpa.model.ProductRequest;
+import io.javabrains.springsecurityjpa.model.SportRequest;
+import io.javabrains.springsecurityjpa.model.UserRequest;
+import io.javabrains.springsecurityjpa.models.User;
+import io.javabrains.springsecurityjpa.service.AdminService;
+import io.javabrains.springsecurityjpa.service.ProductService;
+import io.javabrains.springsecurityjpa.service.SportService;
+import io.javabrains.springsecurityjpa.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+
+    @Autowired
+    private AdminService adminService;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    SportService sportService;
+
+    @Autowired
+    UserService userService;
+
+
+
+
+    @Autowired
+    public AdminController(@Lazy AdminService adminService) {
+        this.adminService = adminService;
+    }
+
+
+
+    //PRODUCT OPERATIONS
+
+    @GetMapping("/createpro")
+    public String addPro(Model model){
+        model.addAttribute("proRequest", new ProductRequest());
+
+        return "createpro";
+    }
+
+    @PostMapping("/createproduct")
+    public String create(@ModelAttribute("proRequest") ProductRequest product){
+        productService.create(product);
+        return "redirect:/admin/allproducts";
+    }
+
+
+    @GetMapping("/getproductid")
+    public ResponseEntity getProducts(@RequestParam Integer id){
+        Product productRequest = productService.getProduct(id);
+        if (productRequest == null) {
+            return new ResponseEntity("Product not found", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(productRequest);
+    }
+
+    @GetMapping("/deleteproduct/{id}")
+    public String delete(@PathVariable("id") Integer id){
+        Product proRequest = productService.getProduct(id);
+        if (proRequest == null) {
+            return"Product not found";
+        }
+        boolean res = productService.deleteProduct(id);
+        if(res){
+            return "redirect:/admin/allproducts";
+        }
+        else {
+            return"Product not found";
+        }
+    }
+
+
+
+    @GetMapping("/allproducts")
+    public String getAll(Model model){
+        List<Product> products = productService.get();
+        model.addAttribute("product", products);
+
+        return "products";
+    }
+
+
+
+
+    // SPORT OPERATIONS
+
+    @GetMapping("/createsport")
+    public String addSpo(Model model){
+        model.addAttribute("sportRequest", new SportRequest());
+
+        return "createsport";
+    }
+
+    @PostMapping("/createspo")
+    public String create(@ModelAttribute("sportRequest") SportRequest sport) {
+
+        sportService.create(sport);
+        return "redirect:/admin/allsport";
+    }
+
+    // tale info about product
+    @GetMapping("/getsportid")
+    public ResponseEntity getSport(@RequestParam Integer id) {
+        Sport sportRequest = sportService.getSport(id);
+        if (sportRequest == null) {
+            return new ResponseEntity("Sport not found", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(sportRequest);
+    }
+
+    // delete from database
+    @GetMapping("/deletesport/{id}")
+    public String deleteSport(@PathVariable("id") Integer id) {
+        Sport sportRequest = sportService.getSport(id);
+        if (sportRequest == null) {
+            return "Product not found";
+        }
+        boolean res = sportService.deleteSport(id);
+        if (res) {
+            return "redirect:/admin/allsport";
+        } else {
+            return "There is a mistake. You are not login.";
+        }
+    }
+
+
+
+    @GetMapping("/allsport")
+    public String getAllSport(Model model){
+        List<Sport> sports = sportService.get();
+        model.addAttribute("sport", sports);
+
+        return "sports";
+    }
+
+
+    //----------------USER
+
+    @GetMapping("/allusers")
+    public String getAllUsers(Model model){
+        List<User> users = userService.get();
+        model.addAttribute("users", users);
+
+        return "users";
+    }
+
+
+    @GetMapping("del/{id}")
+    public String deleteUser(@PathVariable("id") Integer id){
+        User userRequest = userService.getUser(id);
+        if (userRequest == null) {
+            return "User not found";
+        }
+        boolean res = userService.deleteUser(id);
+        if(res){
+            return "redirect:/admin/allusers";
+        }
+        else {
+            return "There is a mistake. You are not login.";
+        }
+    }
+
+
+
+
+}
