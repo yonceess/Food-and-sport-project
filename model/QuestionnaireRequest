@@ -1,0 +1,58 @@
+package io.javabrains.springsecurityjpa.model;
+import lombok.Data;
+
+@Data
+public class QuestionnaireRequest {
+    private String email;
+    private int height;
+    private int weight;
+    private int age;
+    private String lifestyle;
+
+    public String getLifestyle() {
+        return lifestyle;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String  getEmail() {
+        return email;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setId(String email) {
+        this.email = email;
+    }
+
+    public void setLifestyle(String lifestyle) {
+        this.lifestyle = lifestyle;
+    }
+
+    public double calories(int w, int h, int a ){
+        //questRepository.calories(qRequest.getHeight(), qRequest.getWeight(), qRequest.getAge()){
+        double nn = 447.6 + (9.2 * w) + (3.1* h) - (4.3*a);
+        return nn;
+    }
+
+}
