@@ -1,0 +1,28 @@
+package io.javabrains.springsecurityjpa.model;
+
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+public class SportRequest {
+    private String name;
+    private int time;
+    private int calories;
+
+
+    public String getName() {
+        return name;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setDate(Date date) {
+    }
+}
